@@ -1,30 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function createStore(initialState) {
+function taskReducer(state, action) {
+    switch (action.type) {
+        case 'task/completed':
+            const newArray = [...state];
+            const elementIndex = newArray.findIndex(el => el.id === action.payload.id)
+            newArray[elementIndex].completed = true;
+            return newArray
+        default:
+            return state
+    }
+}
+
+function createStore(reducer, initialState) {
     let state = initialState
 
     function getState() {
         return state
     }
     function dispatch(action) {
-        if (action.type === 'task/completed') {
-            const newArray = [...state];
-            const elementIndex = newArray.findIndex(el => el.id === action.payload.id)
-            newArray[elementIndex].completed = true;
-            state = newArray;
-        }
+        state = reducer(state, action);
     }
 
     return { getState, dispatch }
 }
-const store = createStore([{id: 1, description: 'Task 1', completed: false}])
+const store = createStore(taskReducer,[{id: 1, description: 'Task 1', completed: false}])
 
 const App = (params) => {
+    const completeTask = () => {
+        store.dispatch({ type: 'task/completed', payload: { id: 1 } })
+    }
     return (
         <>
             <h1>App</h1>
-            <button onClick={() => {store.dispatch({ type: 'task/completed', payload: { id: 1 } })}}>Complete</button>
+            <button onClick={completeTask}>Complete</button>
         </>
 
     );
