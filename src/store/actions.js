@@ -12,3 +12,9 @@ export function titleChanged(id) {
         payload: { id, title: `new title for ${id}` }
     }
 }
+export function taskDeleted(id) {
+    return {
+        type: actions.taskDeleted,
+        payload: { id }
+    }
+}
