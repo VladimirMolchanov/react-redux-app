@@ -1,44 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from "./store/createStore";
+import { taskReducer } from "./store/taskReducer";
+import * as actions from './store/actionTypes';
 
-function taskReducer(state, action) {
-    switch (action.type) {
-        case 'task/completed':
-            const newArray = [...state];
-            const elementIndex = newArray.findIndex(el => el.id === action.payload.id)
-            newArray[elementIndex].completed = true;
-            return newArray
-        default:
-            return state
-    }
-}
+const initialState = [
+    { id: 1, title: 'Task 1', completed: false },
+    { id: 2, title: 'Task 2', completed: false }
+]
 
-function createStore(reducer, initialState) {
-    let state = initialState
-    let listeners = []
+const store = createStore(taskReducer, initialState)
 
-    function getState() {
-        return state
-    }
-    function dispatch(action) {
-        state = reducer(state, action);
-        for (let i=0; i < listeners.length; i++) {
-            const listener = listeners[i]
-            listener()
-        }
-    }
-    function subscribe(listener) {
-        listeners.push(listener)
-    }
-
-    return { getState, dispatch, subscribe }
-}
-const store = createStore(taskReducer,[
-    { id: 1, description: 'Task 1', completed: false },
-    { id: 2, description: 'Task 2', completed: false }
-])
-
-const App = (params) => {
+const App = () => {
     const [state, setState] = useState(store.getState())
 
     useEffect(() => {
@@ -48,7 +21,10 @@ const App = (params) => {
     }, []);
 
     const completeTask = (id) => {
-        store.dispatch({ type: 'task/completed', payload: { id } })
+        store.dispatch({ type: actions.taskUpdated, payload: { id, completed: true} })
+    }
+    const changeTitle = (taskId) => {
+        store.dispatch({ type: actions.taskUpdated, payload: { id: taskId, title: `new title for ${taskId}` } })
     }
     return (
         <>
@@ -56,9 +32,10 @@ const App = (params) => {
             <ul>
                 {state.map(el => (
                     <li key={el.id}>
-                        <p>{el.description}</p>
+                        <p>{el.title}</p>
                         <p>{`Completed: ${el.completed}`}</p>
                         <button onClick={() => completeTask(el.id)}>Complete</button>
+                        <button onClick={() => changeTitle(el.id)}>Change title</button>
                         <hr/>
                     </li>
                 ))}
