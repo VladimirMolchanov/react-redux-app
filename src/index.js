@@ -7,17 +7,28 @@ function createStore(initialState) {
     function getState() {
         return state
     }
+    function dispatch(action) {
+        if (action.type === 'task/completed') {
+            const newArray = [...state];
+            const elementIndex = newArray.findIndex(el => el.id === action.payload.id)
+            newArray[elementIndex].completed = true;
+            state = newArray;
+        }
+    }
 
-    return {getState}
+    return { getState, dispatch }
 }
-const store = createStore([{id: 1, description: "Task 1", completed: false}])
+const store = createStore([{id: 1, description: 'Task 1', completed: false}])
 
 const App = (params) => {
     return (
-        <h1>App</h1>
+        <>
+            <h1>App</h1>
+            <button onClick={() => {store.dispatch({ type: 'task/completed', payload: { id: 1 } })}}>Complete</button>
+        </>
+
     );
 };
-
 
 ReactDOM.render(
   <React.StrictMode>
