@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import * as actions from './store/actionTypes';
 import { initiateStore } from "./store/store";
+import * as actions from "./store/actions";
 
 const store = initiateStore()
 
@@ -15,10 +15,10 @@ const App = () => {
     }, []);
 
     const completeTask = (id) => {
-        store.dispatch({ type: actions.taskUpdated, payload: { id, completed: true} })
+        store.dispatch(actions.taskCompleted(id))
     }
-    const changeTitle = (taskId) => {
-        store.dispatch({ type: actions.taskUpdated, payload: { id: taskId, title: `new title for ${taskId}` } })
+    const changeTitle = (id) => {
+        store.dispatch(actions.titleChanged(id))
     }
     return (
         <>
@@ -35,7 +35,6 @@ const App = () => {
                 ))}
             </ul>
         </>
-
     );
 };
 
