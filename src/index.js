@@ -2,21 +2,23 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './store/store'
 import { completeTask, titleChanged, taskDeleted, getTasks } from "./store/task";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 
 const store = createStore()
 
 const App = () => {
     const state = useSelector((state) => state)
+    const dispatch = useDispatch()
+
     useEffect(() => {
-        store.dispatch(getTasks())
-    }, []);
+        dispatch(getTasks())
+    },[]);
 
     const changeTitle = (id) => {
-        store.dispatch(titleChanged(id))
+        dispatch(titleChanged(id))
     }
     const deleteTask = (id) => {
-        store.dispatch(taskDeleted(id))
+        dispatch(taskDeleted(id))
     }
     return (
         <>
