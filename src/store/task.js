@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { createSlice } from "@reduxjs/toolkit";
 import todosService from "../service/todos.service";
+import { setError } from "./errors";
 
 const initialState = {
     entities: [],
-    isLoading: true,
-    error: null
+    isLoading: true
 }
 
 const slice = createSlice({
@@ -29,13 +29,12 @@ const slice = createSlice({
         taskRequested(state) {
             state.isLoading = true
         },
-        taskRequestFailed(state, action) {
+        taskRequestFailed(state) {
             state.isLoading = false
-            state.error = action.payload
         }
     }
 })
-const { actions, reducer } = slice
+const { actions, reducer: tasksReducer } = slice
 const { update, remove, recived, taskRequested, taskRequestFailed } = actions
 
 export const getTasks = () => async (dispatch) => {
@@ -45,7 +44,7 @@ export const getTasks = () => async (dispatch) => {
         dispatch(recived(data))
     } catch (error) {
         dispatch(taskRequestFailed(error.message))
-        console.log(error.message)
+        dispatch(setError(error.message))
     }
 }
 
@@ -59,4 +58,4 @@ export function taskDeleted(id) {
     return remove({ id })
 }
 
-export default reducer
+export default tasksReducer
