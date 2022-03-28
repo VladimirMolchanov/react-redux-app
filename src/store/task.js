@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import todosService from "../service/todos.service";
 
 const initialState = []
@@ -8,7 +8,7 @@ const slice = createSlice({
     name: "task",
     initialState,
     reducers: {
-        set(state, action) {
+        recived(state, action) {
             return action.payload
         },
         update(state, action) {
@@ -24,14 +24,19 @@ const slice = createSlice({
     }
 })
 const { actions, reducer } = slice
-const { update, remove, set } = actions
+const { update, remove, recived } = actions
+
+const taskRequested = createAction("task/requested")
+const taskRequestFailed = createAction("task/requestFailed")
 
 export const getTasks = () => async (dispatch) => {
+    dispatch(taskRequested())
     try {
         const data = await todosService.fetch()
-        dispatch(set(data))
+        dispatch(recived(data))
     } catch (error) {
-        console.error(error)
+        dispatch(taskRequestFailed(error.message))
+        console.log(error.message)
     }
 }
 
