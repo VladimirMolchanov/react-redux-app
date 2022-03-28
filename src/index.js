@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './store/store'
-import { completeTask, titleChanged, taskDeleted, getTasks } from "./store/task";
+import { completeTask, titleChanged, taskDeleted, getTasks, loadTasks, getTasksLoadingStatus } from "./store/task";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import { getError } from "./store/errors";
 
 const store = createStore()
 
 const App = () => {
-    const state = useSelector((state) => state.tasks.entities)
-    const isLoading = useSelector((state) => state.tasks.isLoading)
-    const error = useSelector((state) => state.errors.entities[0])
+    const state = useSelector(getTasks())
+    const isLoading = useSelector(getTasksLoadingStatus())
+    const error = useSelector(getError())
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getTasks())
+        dispatch(loadTasks())
     },[]);
 
     const changeTitle = (id) => {
