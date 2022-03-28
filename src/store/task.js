@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [
@@ -24,8 +25,8 @@ const slice = createSlice({
 const { actions, reducer } = slice
 const { update, remove } = actions
 
-export function taskCompleted(id) {
-    return update({ id, completed: true })
+export const completeTask = (id) => (dispatch, getState) => {
+    dispatch(update({ id, completed: true }))
 }
 export function titleChanged(id) {
     return update({ id, title: `new title for ${id}` })
