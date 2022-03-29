@@ -1,7 +1,15 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './store/store'
-import { completeTask, titleChanged, taskDeleted, getTasks, loadTasks, getTasksLoadingStatus } from "./store/task";
+import {
+    completeTask,
+    titleChanged,
+    taskDeleted,
+    getTasks,
+    loadTasks,
+    getTasksLoadingStatus,
+    createTask
+} from "./store/task";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { getError } from "./store/errors";
 
@@ -32,6 +40,10 @@ const App = () => {
     return (
         <>
             <h1>App</h1>
+            <button onClick={() => dispatch(createTask({
+                title: 'new post',
+                completed: false
+            }))}>add post</button>
             <ul>
                 {state.map(el => (
                     <li key={el.id}>
